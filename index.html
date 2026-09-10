@@ -267,5 +267,49 @@
 
 
   <script src="app.js"></script>
+
+  <!-- Ajuste estético: separa "Jogo + número" do primeiro número sorteado. -->
+  <script>
+    (function () {
+      function corrigirRotuloJogos() {
+        const areas = document.querySelectorAll('#jogos, #historico');
+
+        areas.forEach(function (area) {
+          const walker = document.createTreeWalker(
+            area,
+            NodeFilter.SHOW_TEXT,
+            {
+              acceptNode: function (node) {
+                return node.nodeValue && /Jogo\s+\d+\s+\d{1,2}/i.test(node.nodeValue)
+                  ? NodeFilter.FILTER_ACCEPT
+                  : NodeFilter.FILTER_REJECT;
+              }
+            }
+          );
+
+          const textos = [];
+          let node;
+          while ((node = walker.nextNode())) textos.push(node);
+
+          textos.forEach(function (textNode) {
+            textNode.nodeValue = textNode.nodeValue.replace(
+              /(Jogo\s+\d+)\s+(?=\d{1,2}\b)/gi,
+              '$1:  '
+            );
+          });
+        });
+      }
+
+      corrigirRotuloJogos();
+
+      const observer = new MutationObserver(corrigirRotuloJogos);
+      const jogos = document.getElementById('jogos');
+      const historico = document.getElementById('historico');
+
+      if (jogos) observer.observe(jogos, { childList: true, subtree: true, characterData: true });
+      if (historico) observer.observe(historico, { childList: true, subtree: true, characterData: true });
+    })();
+  </script>
+
 </body>
 </html>
