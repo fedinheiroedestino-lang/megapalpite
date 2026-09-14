@@ -1,0 +1,13 @@
+{
+  "name": "megapalpite-cloudflare",
+  "private": true,
+  "scripts": {
+    "deploy": "wrangler deploy",
+    "d1:local": "wrangler d1 execute megapalpite-db --local --file=database.sql",
+    "d1:remote": "wrangler d1 execute megapalpite-db --remote --file=database.sql",
+    "d1:check": "wrangler d1 execute megapalpite-db --remote --command=\"SELECT COUNT(*) AS total, MIN(concurso) AS primeiro, MAX(concurso) AS ultimo FROM concursos;\""
+  },
+  "devDependencies": {
+    "wrangler": "latest"
+  }
+}
